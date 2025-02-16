@@ -58,7 +58,7 @@ const InvoiceSearch: React.FC = () => {
               type="text"
               size="small"
               fullWidth
-              className="pl-6 bg-gray-200"
+              className="pl-6 bg-white"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleSearchEnter}
@@ -66,12 +66,12 @@ const InvoiceSearch: React.FC = () => {
           </div>
         </div>
 
-        <div className="w-72 rounded-lg bg-gray-200">
+        <div className="w-72 rounded-lg">
           <Select
             id="status-search"
             fullWidth
             size="small"
-            className="text-gray-500"
+            className="text-gray-500 bg-white"
             displayEmpty
             value={searchStatus}
             onChange={(e) => setSearchStatus(e.target.value)}
