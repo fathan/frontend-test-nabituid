@@ -2,13 +2,19 @@ import React from "react";
 import TableHead from "@/app/components/molecules/TableHead";
 import TableRow from "@/app/components/molecules/TableRow";
 
+interface Column {
+  label: string;
+  key: string;
+  className?: string;
+}
+
+interface RowData {
+  [key: string]: React.ReactNode;
+}
+
 interface TableProps {
-  columns: {
-    label: string;
-    key: string;
-    className?: string
-  }[];
-  data: Record<string, React.ReactNode>[];
+  columns: Column[];
+  data: RowData[];
 }
 
 const Table: React.FC<TableProps> = ({ columns, data }) => {

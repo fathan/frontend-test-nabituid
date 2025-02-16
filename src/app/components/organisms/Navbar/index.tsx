@@ -13,11 +13,17 @@ export default function Navbar () {
         <ToggleSwitch />
       </div>
 
-      <button className="relative p-2 text-gray-600 bg-gray-100 rounded-full">
+      <button
+        className="relative p-2 text-gray-600 bg-gray-100 rounded-full"
+        aria-label="Notifications"
+      >
         <IoMdNotificationsOutline />
       </button>
 
-      <button className="relative p-2 text-gray-600 bg-gray-100 rounded-full">
+      <button
+        className="relative p-2 text-gray-600 bg-gray-100 rounded-full"
+        aria-label="Chat"
+      >
         <IoChatbubbleEllipsesOutline />
         <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
       </button>
