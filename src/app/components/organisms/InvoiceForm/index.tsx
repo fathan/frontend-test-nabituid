@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { NumericFormat } from 'react-number-format';
 
 import Alert from '@/app/components/molecules/Alert';
 import Card from '@/app/components/molecules/Card';
@@ -30,15 +31,25 @@ interface IPropsInvoiceForm {
 }
 
 const invoiceSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  invoiceNumber: z.string().min(1, 'Invoice number is required'),
-  dueDate: z.custom<Dayjs>((value) => dayjs(value).isValid(), {
-    message: 'Invalid date',
-  }),
-  amount: z.number().min(1, 'Amount is required'),
-  status: z.enum(['paid', 'unpaid', 'pending'], {
-    errorMap: () => ({ message: 'Status is required' }),
-  }),
+  name: z
+    .string()
+    .min(1, 'Name is required'),
+  invoiceNumber: z
+    .string()
+    .min(1, 'Invoice number is required'),
+  dueDate: z
+    .custom<Dayjs>((value) => dayjs(value).isValid(), {
+      message: 'Invalid date',
+    }),
+  amount: z
+    .string()
+    .min(1, 'Amount is required')
+    .transform((val) => Number(val.replace(/,/g, '')))
+    .refine((val) => !isNaN(val) && val > 0, { message: 'Amount must be a positive number' }),
+  status: z
+    .enum(['paid', 'unpaid', 'pending'], {
+      errorMap: () => ({ message: 'Status is required' }),
+    }),
 });
 
 type InvoiceFormData = z.infer<typeof invoiceSchema>;
@@ -76,6 +87,12 @@ const InvoiceForm: React.FC<IPropsInvoiceForm> = (props) => {
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
       setValue('dueDate', date);
+    }
+  };
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value) {
+      setValue('amount', parseFloat(event.target.value));
     }
   };
 
@@ -181,6 +198,7 @@ const InvoiceForm: React.FC<IPropsInvoiceForm> = (props) => {
 
             <FormInput id="invoice-number" label="Invoice" required>
               <OutlinedInput
+                autoComplete='off'
                 placeholder="Enter your invoice number"
                 fullWidth
                 {...register('invoiceNumber')}
@@ -205,15 +223,20 @@ const InvoiceForm: React.FC<IPropsInvoiceForm> = (props) => {
 
             <FormInput id="amount" label="Amount" required>
               <div className="relative">
-                <span className="absolute h-full px-7 bg-gray-400 text-gray-100 flex justify-center items-center">
+                <span className="absolute h-full px-7 bg-gray-500 text-gray-100 flex justify-center items-center">
                   Rp
                 </span>
-                <OutlinedInput
+                <NumericFormat
                   placeholder="Enter your invoice amount"
-                  type="text"
+                  customInput={OutlinedInput}
+                  thousandSeparator
+                  valueIsNumericString
                   fullWidth
+                  prefix=""
+                  autoComplete='off'
                   className="pl-20"
                   {...register('amount')}
+                  onChange={handleAmountChange}
                 />
               </div>
               {errors.amount && <p className="text-red-500 text-sm">{errors.amount.message}</p>}
